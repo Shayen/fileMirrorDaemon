@@ -10,13 +10,34 @@ schedule:
     - thursday
     - friday
 
-# [daemon]
-# This configuration file
-source:
-destination:
+IGNORE_dir: []
+IGNORE_fileType: []
 
-# Log file location:
-logPath:
+# [daemon]
+# The pidFile is the location where the daemon will store its process id. If
+# this file is removed while the daemon is running, it will shutdown cleanly
+# after the next pass through the event processing loop.
+pidFile: ~/shotgunEventDaemon.pid
+
+# This configuration file
+source: /mnt/drive/myRepo
+destination: ~/GIT/myRepo
+
+# Log mode:
+# 0 > Off
+# 1 > On
+logMode: 1
+
+# The path where to put log files
+logPath: /var/log
+
+# The name of the daemon log file. The setup is for 10 log files that rotate
+# every night at midnight
+logFile: filemirror.log
+
+# Number of seconds to wait before checking new file after each batch of events
+# is done processing
+fetch_interval: 60
 
 # The level of logging that should be sent to the log file.
 # This value is passed to the logging library. Any positive
@@ -26,7 +47,12 @@ logPath:
 # - 30 - Warnings
 # - 40 - Error
 # - 50 - Critical
-logging: 20
+logLevel: 10
 
 # [git]
-gitRepo:
+git:
+  url:
+  path:
+  branch:
+  remote:
+  deploy:
