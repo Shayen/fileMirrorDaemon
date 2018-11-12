@@ -49,7 +49,7 @@ class GitWrapper():
     def pull(repo_config):
         """Pulls the latest version of the repo from the git server"""
         import logging
-        from .process import ProcessWrapper
+        from process import ProcessWrapper
         import os
         import platform
 
@@ -92,6 +92,63 @@ class GitWrapper():
             logger.info("Repository %s successfully updated" % repo_config['path'])
         else:
             logger.error("Unable to update repository %s" % repo_config['path'])
+
+        return int(res)
+
+    @staticmethod
+    def push(repo_config):
+        """push the latest version of the repo to the git server"""
+        import logging
+        from .process import ProcessWrapper
+        import datetime
+        import os
+        import platform
+
+        logger = logging.getLogger()
+        logger.info("Pushing repository %s" % repo_config['path'])
+
+        # Only pull if there is actually a local copy of the repository
+        if 'path' not in repo_config:
+            logger.info('No local repository path configured, no push will occure')
+            return 0
+
+        commit_message = "daily commit : " + str(datetime.datetime.now())
+        commands = []
+
+        # On Windows, bash command needs to be run using bash.exe. This assumes bash.exe
+        # (typically installed under C:\Program Files\Git\bin) is in the system PATH.
+        if platform.system().lower() == "windows":
+            commands.append('bash -c "cd \\"' + repo_config['path'] + '\\" && unset GIT_DIR"')
+        else:
+            commands.append('unset GIT_DIR')
+
+        # if "prepush" in repo_config:
+            # commands.append(repo_config.get('prepush', ''))
+
+        # commands.append('git fetch ' + repo_config['remote'])
+        commands.append('git add --all')
+        commands.append('git commit -m \"%s\"'%commit_message)
+        commands.append('git push %s --tags'% repo_config['remote'])
+        print commands
+        # commands.append('git reset --hard ' + repo_config['remote'] + "/" + repo_config['branch'])
+        # commands.append('git submodule update --init --recursive')
+
+        # if "postpush" in repo_config:
+        #     commands.append(repo_config.get('postpush', ''))
+
+        # All commands need to success
+        for command in commands:
+            command = 'runuser -l nook -c \"cd %s; %s\"'% (repo_config['path'], command)
+            res = ProcessWrapper().call(command, cwd=repo_config['path'], shell=True, supressStderr=True)
+
+            if res != 0 and "git commit" not in command:
+                logger.error("Command '%s' failed with exit code %s" % (command, res))
+                break
+
+        if res == 0 and os.path.isdir(repo_config['path']):
+            logger.info("Repository %s successfully pushed" % repo_config['path'])
+        else:
+            logger.error("Unable to push repository %s" % repo_config['path'])
 
         return int(res)
 
@@ -156,3 +213,17 @@ class GitWrapper():
         logger.info('%s commands executed with status; %s' % (str(len(res)), str(res)))
 
         return res
+
+if __name__ == '__main__':
+    import logging
+    handler = logging.StreamHandler()
+    handler.setFormatter(logging.Formatter("%(levelname)s:%(name)s:%(message)s"))
+    logging.getLogger().addHandler(handler)
+
+    repo_config = {
+        'url': 'git@github.com:M2ools/MEME_mirror',
+        'branch': 'master',
+        'remote': 'origin',
+        'path' : '/home/nook/GIT/MEME_mirror/'
+    }
+    GitWrapper.pull(repo_config)

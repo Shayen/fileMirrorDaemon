@@ -97,6 +97,12 @@ class Config(object):
 		result = self._configData.get('IGNORE_fileType', [])
 		return result if type(result) == type(dict()) else list(result)
 
+	@property
+	def repo_config(self):
+		repo_config = self._configData['git']
+		repo_config['path'] = self.destination
+		return repo_config
+
 	def getLogFile(self, filename=None):
 
 		if filename is None:
@@ -232,9 +238,20 @@ class Engine(object):
 		self._continue = False
 
 	def _mainLoop(self):
+		from src.wrappers import GitWrapper
+
 		self.log.debug("Main loop started.")
+
+		repo_config = self.config.repo_config
+		if os.path.isdir(repo_config['path']) and os.path.isdir(repo_config['path'] + '/.git'):
+			GitWrapper.init(repo_config)
+		else :
+			GitWrapper.clone(repo_config)
+
 		while self._continue:
 			self._mirror()
+			# GitWrapper.push(repo_config)
+
 			time.sleep(self.config.fetch_interval)
 
 		self.log.debug('Shuting down processing loop.')

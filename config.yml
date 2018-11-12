@@ -13,6 +13,7 @@ schedule:
 IGNORE_dir:
   - .idea
   - USER_ACTIVITY
+  - .git
 IGNORE_fileType:
   - .pyc
 
@@ -23,7 +24,8 @@ IGNORE_fileType:
 pidFile: /home/nook/shotgunEventDaemon.pid
 
 # This configuration file
-source: /mnt/META/SCRIPTS/MEME
+#source: /home/nook/META/SCRIPTS/MEME
+source: /mnt/Projects/META/SCRIPTS/MEME
 destination: /home/nook/META/SCRIPTS/MEME
 
 # Log mode:
@@ -40,7 +42,7 @@ logFile: filemirror.log
 
 # Number of seconds to wait before checking new file after each batch of events
 # is done processing
-fetch_interval: 60
+fetch_interval: 3600
 
 # The level of logging that should be sent to the log file.
 # This value is passed to the logging library. Any positive
@@ -53,4 +55,11 @@ fetch_interval: 60
 logLevel: 10
 
 # [git]
-gitRepo: https://github.com/M2ools/memeActivePassive
+git:
+  url: git@github.com:M2ools/MEME_mirror
+  # path: # Already set from destination
+  branch: master
+  remote: origin
+  deploy:
+  prepush:
+  postpush:
