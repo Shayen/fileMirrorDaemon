@@ -250,7 +250,7 @@ class Engine(object):
 
 		while self._continue:
 			self._mirror()
-			# GitWrapper.push(repo_config)
+			GitWrapper.push(repo_config)
 
 			time.sleep(self.config.fetch_interval)
 
