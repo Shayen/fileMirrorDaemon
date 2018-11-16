@@ -138,7 +138,7 @@ class GitWrapper():
 
         # All commands need to success
         for command in commands:
-            command = 'runuser -l nook -c \"cd %s; %s\"'% (repo_config['path'], command)
+            # command = 'runuser -l nook -c \"cd %s; %s\"'% (repo_config['path'], command)
             res = ProcessWrapper().call(command, cwd=repo_config['path'], shell=True, supressStderr=True)
 
             if res != 0 and "git commit" not in command:
