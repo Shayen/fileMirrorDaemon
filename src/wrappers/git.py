@@ -141,7 +141,7 @@ class GitWrapper():
             # command = 'runuser -l nook -c \"cd %s; %s\"'% (repo_config['path'], command)
             res = ProcessWrapper().call(command, cwd=repo_config['path'], shell=True, supressStderr=True)
 
-            if res != 0 and "git commit" not in command:
+            if res != 0:
                 logger.error("Command '%s' failed with exit code %s" % (command, res))
                 break
 
