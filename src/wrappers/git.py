@@ -128,7 +128,7 @@ class GitWrapper():
         # commands.append('git fetch ' + repo_config['remote'])
         commands.append('git add --all')
         commands.append('git commit -m \"%s\"'%commit_message)
-        commands.append('git push %s --tags'% repo_config['remote'])
+        commands.append('git push')#% repo_config['remote'])
         print commands
         # commands.append('git reset --hard ' + repo_config['remote'] + "/" + repo_config['branch'])
         # commands.append('git submodule update --init --recursive')
