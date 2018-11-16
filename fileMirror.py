@@ -123,7 +123,7 @@ class Config(object):
 		else :
 			path = filename
 
-			return path
+		return path
 
 class Engine(object):
 
