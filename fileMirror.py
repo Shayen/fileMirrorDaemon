@@ -213,17 +213,17 @@ class Engine(object):
 								                     IGNORE_fileType=self.config.IGNORE_fileType)
 
 		if need2add == [] and need2remove == [] :
-			self.log.debug("Files is indenticald.")
+			self.log.info("Files is indenticald.")
 		else:
 			for _s, _d in need2add:
-				self.log.debug("Copy : %s -> %s"%(_s,_d))
+				self.log.info("Copy : %s -> %s"%(_s,_d))
 				shutil.copy2(_s, _d)
 
 			for _f in need2remove :
-				self.log.debug("Remove : %s"%(_f))
+				self.log.info("Remove : %s"%(_f))
 				os.remove(_f)
 
-			self.log.debug("Mirror success.")
+			self.log.info("Mirror success.")
 
 	def start(self):
 		try:
