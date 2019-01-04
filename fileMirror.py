@@ -250,7 +250,9 @@ class Engine(object):
 
 		while self._continue:
 			self._mirror()
+			self.log.info("Pushing...")
 			GitWrapper.push(repo_config)
+			self.log.info("Push success...")
 
 			time.sleep(self.config.fetch_interval)
 
